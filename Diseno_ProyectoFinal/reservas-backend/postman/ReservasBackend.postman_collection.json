@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "Reservas Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Maria\",\n  \"correo\": \"maria@example.com\",\n  \"contraseña\": \"ClaveSegura1\",\n  \"confirmacion\": \"ClaveSegura1\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.token) { pm.collectionVariables.set('token', json.token); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"correo\": \"maria@example.com\",\n  \"contraseña\": \"ClaveSegura1\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Create Room (ADMIN only)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reservations/rooms/create",
+          "host": ["{{baseUrl}}"],
+          "path": ["reservations", "rooms", "create"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Sala 201\",\n  \"capacidad\": 10,\n  \"ubicacion\": \"Bloque B - Segundo Piso\",\n  \"descripcion\": \"Sala amplia con televisor\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get All Rooms",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reservations/rooms/all",
+          "host": ["{{baseUrl}}"],
+          "path": ["reservations", "rooms", "all"]
+        }
+      }
+    },
+    {
+      "name": "Create Reservation",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reservations/create",
+          "host": ["{{baseUrl}}"],
+          "path": ["reservations", "create"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"salaId\": \"<ID_DE_SALA_REAL>\",\n  \"fecha\": \"2025-12-01\",\n  \"horaInicio\": \"10:00\",\n  \"horaFin\": \"11:00\"\n}"
+        }
+      }
+    }
+  ]
+}
